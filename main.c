@@ -4,6 +4,7 @@
 #include<time.h>
 
 #include "List.h"
+#include "Sort.h"
 
 void main() {
 
