@@ -9,36 +9,51 @@ typedef struct iorb {
 
 void sortList(IORB **head,int(*prio)(int)) {
 
-    int largestValue;
-    char largestFiller[100];
     IORBPtr current = *head;
-    IORBPtr largestBlock = NULL;
+    IORBPtr largest = NULL;
+    IORBPtr beforeLargest = NULL;
+    IORBPtr before = current;
     IORBPtr next = NULL;
+    IORBPtr lastSorted = NULL;
 
     while(current != NULL) {
-        largestBlock = current;
+        largest = current;
         next = current->link;
 
         while(next != NULL) {
-            if(((prio)(next->base_pri) > (prio)(largestBlock->base_pri))) {
-                largestBlock = next;
+            if(((prio)(next->base_pri) > (prio)(largest->base_pri))) {
+                largest = next;
+                beforeLargest = before;
             }
+            before = next;
             next = next->link;
         }
     
-    if(largestBlock != current) {
-        largestValue = (prio)(largestBlock->base_pri);
-        strcpy(largestFiller, largestBlock->filler);
+    if(largest != current) {
 
-        largestBlock->base_pri = current->base_pri;
-        strcpy(largestBlock->filler, current->filler);
+        IORB savedLink = *current;
 
-        current->base_pri = largestValue;
-        strcpy(current->filler, largestBlock->filler);
         
+        current->link = largest->link;   
+
+        if(largest != savedLink.link) {
+            largest->link = savedLink.link; // if not adjacent
+            beforeLargest->link = current; 
+        }
+        else { // if adjacent
+            largest->link = current;
+        }
+        
+        if(current == *head)
+            *head = largest; 
+        else
+            lastSorted->link = largest;
+        
+
     }
-    current = current->link;
-    }
+    lastSorted = largest;
+    current = largest->link;
+}
 }
 
     

@@ -9,7 +9,7 @@ void main() {
 
     srand(time(0));
 
-    int size = 9;
+    int size = 10;
 
     IORBPtr head;
 
